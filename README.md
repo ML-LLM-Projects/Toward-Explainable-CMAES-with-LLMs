@@ -36,3 +36,9 @@ The LLM calls are independent, and each role receives only the information requi
 <p align="center">
   <b>Figure 1.</b> Framework for one run. Coloured boxes represent independent calls to the same LLM, with one colour assigned to each prompt (Table 3), whereas grey boxes represent deterministic operations performed by the code. The report R<sub>n</sub> and the selected parent A<sub>p(n+1)</sub> are provided as inputs to the Generator G in the next cycle. The Explainers E<sub>0</sub> and E additionally receive the set of reference mechanisms K.</em>
 </p>
+
+## Repository Contents
+
+<p>
+  In this repository, readers can find the supplementary material associated with this study. The repository includes the complete prompts used for the four LLM calls, the CMA-ES variants generated throughout the optimization cycles, the corresponding explainability reports, the complete experimental results for the ten reference CMA-ES variants evaluated in this study, and the convergence curves obtained for the evaluated algorithms.
+</p>
