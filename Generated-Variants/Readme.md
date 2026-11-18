@@ -1,17 +1,11 @@
-### GPT5_MINI_GENERATED.ipynb
+<h2>CMA-ES Generated and Reference Variants</h2>
 
-This file contains the final CMA-ES variant selected from the GPT-5 mini run. 
-The variant incorporates adaptive Student-t heavy-tailed sampling, stagnation-driven 
-tail adaptation, and a transient population-size increase while preserving the total 
-evaluation budget.
+<p>
+This folder contains the final CMA-ES variants generated in the two LLM runs, together with the set of CMA-ES reference variants used as design examples and prior knowledge throughout the framework.
+</p>
 
-The experimental settings reported in the paper were applied externally during the 
-BBOB evaluation procedure.
-
-### Qwen3.5 Final Variant
-
-This file contains the final CMA-ES variant selected from the Qwen3.5-122B-A10B run. The variant incorporates **Orthogonalized Mirrored Sampling**, **boundary reflection handling**, and an **elitist mean update**, while preserving the standard CMA-ES step-size and covariance adaptation mechanisms.
-
-In the sampling stage, a subset of search directions is orthogonalized using QR decomposition and combined with their mirrored counterparts to reduce redundancy and improve directional coverage. Candidate solutions that exceed the search-domain bounds are handled through reflection rather than clipping. During the mean update, the weighted offspring recombination is combined with the best solution from the previous generation using a small elitist contribution.
-
-The experimental settings reported in the paper were applied during the BBOB evaluation procedure.
+<ul>
+  <li><b>GPT5_MINI_GENERATED.ipynb:</b> final CMA-ES variant generated in the GPT-5 mini run.</li>
+  <li><b>Qwen3.5 Final Variant.ipynb:</b> final CMA-ES variant generated in the Qwen3.5-122B-A10B run.</li>
+  <li><b>Variants.ipynb:</b> collection of the ten CMA-ES reference variants used as design examples and reference mechanisms during the LLM-guided generation process.</li>
+</ul>
