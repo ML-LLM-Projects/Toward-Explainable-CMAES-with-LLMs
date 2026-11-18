@@ -40,5 +40,5 @@ The LLM calls are independent, and each role receives only the information requi
 ## Repository Contents
 
 <p>
-  In this repository, readers can find the supplementary material associated with this work. The repository includes the complete prompts used for the four LLM calls, the CMA-ES variants generated throughout the optimization cycles, the corresponding explainability reports, the complete experimental results for the ten reference CMA-ES variants evaluated in this study, and the convergence curves obtained for the evaluated algorithms.
+  In this repository, readers can find the supplementary material associated with this work. The repository includes the complete prompts used for the four LLM roles, the final CMA-ES variants generated in the GPT-5 mini and Qwen3.5-122B runs, the ten reference mechanisms derived from established CMA-ES variants and used as design references during the LLM-guided generation process, the final explainability reports, the corresponding experimental histories.
 </p>
