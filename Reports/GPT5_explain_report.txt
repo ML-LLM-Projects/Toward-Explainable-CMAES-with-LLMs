@@ -1,0 +1,40 @@
+BEST VARIANT:
+- Cycle: 15
+- Improved functions: 16
+- Worse functions: 2
+- Same functions: 6
+
+KEY MODIFICATION:
+- A sampling-centered package: small-fraction Student-t heavy‑tail injection into the CMA-ES sampling distribution with per-vector norm rescaling (to the expected Gaussian radius), combined with stagnation-triggered adaptive increases in the injected fraction and tail-heaviness, plus a transient, budget-neutral per-boost population-size (lambda) increase (transient lambda boost).
+
+WHY IT WORKED:
+- Direct observations supported by the experiments:
+  - Performance improved steadily as the sampling family was refined: Cycle 1 (Student‑t injection) → Cycle 5 (add per-vector norm rescaling) → Cycle 6 (add stagnation-triggered alpha boost) → Cycle 9/10 (adaptive alpha magnitude and adaptive nu) → Cycle 15 (add transient lambda boost). The sequence of eligible checkpoints shows increasing numbers of IMPROVED functions: 9 → 12 → 13 → 14 → 15 → 16 (Cycle 15).
+  - Variants that removed the controlled aspects (e.g., unbounded radial multipliers, hard covariance shrinkage, or hard exclusion of heavy samples from adaptation) produced regressions or numerical failures (Cycles 2, 3, 11, 18), and were abandoned or reverted in the reports.
+  - Cycle 15 is the first variant that combined the successful sampling safeguards (norm rescaling), adaptive boost logic and a transient lambda increase while preserving the baseline adaptation machinery; it achieved the best aggregate BBOB profile recorded (16 IMPROVED / 2 WORSE / 6 SAME vs baseline).
+- Plausible mechanistic explanations (supported by algorithmic reasoning and consistent with the reported outcomes):
+  - Occasional heavy-tailed directions increase the probability of making long jumps that escape local basins on multimodal landscapes (explains improvements on Rastrigin, BuecheRastrigin, Gallagher, Lunacek, etc.).
+  - Per-vector norm rescaling retains heavy-tailed directional variability while preventing extreme radii that would otherwise corrupt sigma and covariance updates (explains why Cycle 5+ variants were more stable than raw Student-t injection or radial multiplier variants).
+  - Stagnation-triggered increases in the injected fraction (and adaptive nu) concentrate extra exploration when the run is stuck, increasing the chance to find improvements without constantly destabilizing adaptation during normal progress (explains improved robustness and fewer WORSE outcomes over time).
+  - A transient, budget-neutral lambda boost increases sample diversity during critical boost windows without increasing total evaluations; combined with the controlled heavy-tail injection this gives more opportunities to find improvements while keeping adaptation stable.
+- Uncertain conclusions (not directly proven by the experiments, plausible but not causal claims):
+  - The exact relative contribution of the transient lambda boost versus the adaptive-alpha/nu schedule is not isolated by a single ablation in the supplied history; both were present at the best checkpoint, so their separate causal weights are uncertain.
+  - Whether further small refinements to adaptation (soft attenuation, Mahalanobis rescaling, or subspace targeting) would outperform the current package cannot be concluded from these results (some of those were tried later and produced mixed results).
+
+EVOLUTIONARY PATH:
+- Root (Cycle 0): baseline CMA-ES.
+- Cycle 1: introduce Student-t injection (alpha=0.10, nu=3) — produced net gains (9 improved) and became an eligible checkpoint.
+- Cycle 5: add per-vector norm rescaling of injected Student-t draws to the expected Gaussian norm — improved stability and more IMPROVED functions (12).
+- Cycle 6: add stagnation-triggered temporary increase of injection fraction (alpha boost, e.g., from 0.10 to 0.30 for a short window) — further improvement (13).
+- Cycles 7–10: incremental refinements (directional steering tried and reverted; adaptive alpha magnitude and adaptive tail-heaviness nu introduced) — performance continued to climb (Cycle 9: 14 improved; Cycle 10: 15 improved).
+- Cycle 15: introduce a transient, budget-neutral lambda (population-size) boost during stagnation while preserving the adaptive heavy-tail injection, norm rescaling and adaptive nu — achieved the best aggregate profile (16 improved, 2 worse, 6 same) and became the best-so-far checkpoint.
+- Along the way several other mechanism families were tested and then abandoned or reverted based on negative empirical signals: radial multipliers (Cycle 2), covariance shrinkage (Cycle 3 and later conditional shrinkage attempts), hard filtering of heavy samples from adaptation (Cycle 11), winsorized adaptation means (Cycle 13) — these were removed because they increased WORSE cases or caused numerical problems.
+
+EVIDENCE:
+- Numerical progression in eligible checkpoints: Cycle 1 (9/8/7) → Cycle 5 (12/6/6) → Cycle 6 (13/5/6) → Cycle 9 (14/4/6) → Cycle 10 (15/3/6) → Cycle 15 (16/2/6). This monotonic (or near-monotonic) improvement across cycles coincides with the incremental additions listed above.
+- The explainability reports explicitly link each successful improvement to the sampling-family changes (reports repeatedly recommend preserving Student‑t injection + norm rescaling + stagnation boosts) and they record that other changes (covariance shrinkage, radial-only multipliers, hard filtering) produced clear regressions and were abandoned.
+- Variants that omitted the norm-rescaling or introduced large unregulated heavy-tailed radii (Cycle 2, Cycle 3) produced more WORSE outcomes and numerical instability (reports and BBOB scores show spikes/worse counts), supporting the recommendation to rescale injected vectors and keep adaptation unchanged.
+- The framework's decisions recorded in the explainability reports (REVERT, ABANDON_FAMILY, CONTINUE) consistently promoted the sampling family refinements that culminated in Cycle 15, showing the experimental procedure converged on that package as practically best.
+
+CONCLUSION:
+- The best stable LLM-generated CMA-ES variant in the supplied evidence is Cycle 15. The most important algorithmic idea is controlled, conditional heavy-tailed exploration: inject a small fraction of Student‑t draws into sampling, rescale their norms to match the expected Gaussian radius, and intensify their fraction and tail-heaviness transiently when stagnation is detected — optionally combined with a short, budget-neutral per-boost increase in offspring count. Experimental history shows this package progressively increased the number of improved BBOB functions and minimized regressions compared with other attempted families (covariance shrinkage, unbounded radial multipliers, or hard filtering), suggesting the combination strikes a practical balance between exploration (escaping multimodal traps) and stability (protecting sigma and covariance adaptation). Evidence supports association (correlation) between these mechanisms and the observed gains; final causal attribution beyond that association remains a plausible, but not strictly proven, interpretation.

@@ -1,0 +1,34 @@
+BEST VARIANT:
+- Cycle: 14
+- Improved functions: 18
+- Worse functions: 0
+- Same functions: 6
+
+KEY MODIFICATION:
+- Orthogonalized Mirrored Sampling (QR decomposition applied to the first min(lambda/2, dim) direction vectors before forming mirrored pairs).
+
+WHY IT WORKED:
+- The modification reduced redundancy in the initial search directions compared to the standard Mirrored Sampling used in Cycles 4, 5, 8, and 11.
+- By orthogonalizing the base vectors via QR decomposition, the population sampled a more diverse set of independent directions within the covariance matrix constraints, preventing premature concentration in shared subspaces.
+- This enhanced exploration capability complemented the existing Boundary Reflection (Cycle 2) and Fixed Elitist Mean Update (Cycle 11) mechanisms, allowing the algorithm to navigate difficult multimodal landscapes (e.g., Gallagher, Katsuura, Schwefel) without destabilizing the search on unimodal functions.
+- The mechanism achieved this diversity increase without increasing the evaluation budget (lambda population size remained the same), satisfying the framework's constraints.
+
+EVOLUTIONARY PATH:
+- Cycle 0: Baseline Fixed CMA-ES.
+- Cycle 2: Introduced Boundary Reflection (Improved handling of constraint repair vs. clipping). Status: Temporary Best (12 IMPROVED).
+- Cycle 4: Added Mirrored Sampling to Boundary Reflection (Improved variance reduction). Status: New Best (13 IMPROVED).
+- Cycle 11: Added Fixed Elitist Mean Update (Preserved elite solutions during recombination). Status: New Best (13 IMPROVED).
+- Cycle 12-13: Experimented with Stagnation-Sensitive Weights and Covariance Reset. Result: Regression or Neutral compared to Cycle 11.
+- Cycle 14: Applied Orthogonalization to the Mirrored Sampling from Cycle 11. Result: Breakthrough to 18 IMPROVED, 0 WORSE.
+- Cycle 15-19: Attempted adaptive weights, soft boundaries, and adaptive C1 scaling. Result: Regressions or neutral returns. Cycle 16 confirmed stability of the Cycle 14 configuration.
+
+EVIDENCE:
+- Cycle 14 Comparison vs Baseline: 18 IMPROVED, 0 WORSE, 6 SAME.
+- Cycle 11 Comparison vs Baseline: 13 IMPROVED, 4 WORSE, 7 SAME.
+- Functional Gains from 11 to 14: Improved performance on Gallagher101 (7.55E+00 -> 4.11E+00), Gallagher21 (5.23E+00 -> 3.40E+00), Katsuura (8.92E-01 -> 1.57E-01), and Schwefel (1.80E+00 -> 1.76E+00).
+- Explanation Report Cycle 14: Noted that Orthogonalized Mirrored Sampling reduces redundancy in search directions compared to Cycle 4's standard pairs.
+- Explanation Report Cycle 16: Confirmed Cycle 16 matched Cycle 14's performance (18 IMPROVED, 0 WORSE) and served as a numerically stable checkpoint, verifying the robustness of the Cycle 14 configuration.
+- No variant achieved more IMPROVED functions or fewer WORSE functions than Cycle 14 in the entire experimental history.
+
+CONCLUSION:
+Cycle 14 represents the optimal configuration discovered within the experimental constraints. Its success is attributed to the Orthogonalized Mirrored Sampling mechanism, which effectively maximized the diversity of the initial population directions within the fixed lambda budget. This mechanism solved the exploration limitations of the previous best variant (Cycle 11) while maintaining the solution preservation stability of the Fixed Elitist Update and the constraint handling of Boundary Reflection. No subsequent modification improved upon Cycle 14's performance, and later attempts (Cycles 15-19) resulted in degradation, confirming Cycle 14 as the stable best-so-far solution.
